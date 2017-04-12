@@ -1,0 +1,83 @@
+<head>
+    <meta charset="UTF-8" />
+    <title> 姆Q的奇妙歷險 </title>
+</head>
+<body>
+
+<style>
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                          supported by Chrome and Opera */
+}
+
+
+body{
+    background-image: url("assets/img/bg.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    background-color: rgba(255,255,255,0.6);
+    background-blend-mode: lighten;
+
+    font : Arial, '文泉驛正黑', 'WenQuanYi Zen Hei', '儷黑 Pro', 'LiHei Pro', '微軟正黑體', 'Microsoft JhengHei', sans-serif;
+}
+
+#box{
+    background-color: rgba(122, 122, 122, 0.5);
+
+    width: 200px;
+    height: 140px;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -100px;
+    margin-top: -60px;
+}
+
+#box > .item{
+    width: 100%;
+    text-align: center;   
+    font-size: 30px;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 40px;
+}
+
+#box > .item:hover{
+    background-color: rgba(244, 244, 244, 0.5);
+    cursor: pointer;
+}
+
+#title{
+    width: 400px;
+    height: 70px;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -200px;
+    margin-top: -140px;
+
+    text-align: center;   
+    font-size: 50px;
+}
+
+</style>
+
+<div id="title" class="noselect">Imaginary City</div>
+
+<div id="box" class="noselect">
+    <div class="item">網誌區</div>
+    <div class="item">文件區</div>
+    <div class="item">關於我</div>
+</div>
+
+</body>
