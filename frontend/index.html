@@ -1,6 +1,8 @@
 <head>
     <meta charset="UTF-8" />
     <title> 姆Q的奇妙歷險 </title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 </head>
 <body>
 
@@ -70,14 +72,67 @@ body{
     font-size: 50px;
 }
 
+.white-space{
+    background-color: rgba(255, 255, 255, 0.8);
+    
+    width: 600px;
+
+    position: absolute;
+    left: 50%;
+    margin-left: -300px;
+}
+
 </style>
 
-<div id="title" class="noselect">Imaginary City</div>
-
-<div id="box" class="noselect">
-    <div class="item">網誌區</div>
-    <div class="item">文件區</div>
-    <div class="item">關於我</div>
+<div id="app">
+    <router-view></router-view>
 </div>
+
+<script>
+
+index = {
+    template : `
+    <div>
+        <div id="title" class="noselect">Imaginary City</div>
+
+        <div id="box" class="noselect">
+            <router-link to="/blog/" tag="div" class="item"> 網誌區 </router-link>
+            <router-link to="/piki/" tag="div" class="item"> 文件區 </router-link>
+            <router-link to="/piki/Mudream" tag="div" class="item"> 關於我 </router-link>
+        </div>
+    </div>
+    `
+};
+
+piki = {
+    template : `
+    <div class="white-space">
+        piki
+    </div>
+    `
+};
+
+blog = {
+    template : `
+    <div class="white-space">
+        blog
+    </div>
+    `
+};
+
+router = new VueRouter({
+    routes: [
+        { path: '/', component: index },
+        { path: '/blog/', component: blog },
+        { path: '/piki/', component: piki }
+    ]
+});
+
+app = new Vue({
+    el : "#app",
+    router
+});
+
+</script>
 
 </body>
