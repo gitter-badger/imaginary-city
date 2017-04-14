@@ -130,15 +130,25 @@ piki = {
     },
     methods : {
         fetchData : function(){
-            val = this.$route.params.name;
-            if(val)
-                query_url = 'piki/' +  val + '/README.md';
-            else
-                query_url = 'piki/index/README.md';
+            var val = this.$route.params.name || "index";
+            query_url = 'piki/' +  val + '/README.md?v=6';
             this.$http.get(query_url)
             .then(function(ret){
-                console.log(ret);
-                this.content = marked(ret.body);
+                content = marked(ret.body);
+                var elem = document.createElement("div");
+                elem.innerHTML = content;
+                var images = elem.getElementsByTagName("img");
+                for(var i = 0;i < images.length;i++){
+                    var image = images[i];
+                    var src = image.getAttribute('src');
+                    console.log(src);
+                    if(src.indexOf("//") == -1 && src[0] != "/")
+                        src = "/piki/" + val + "/" + src;
+                    image.src = src;
+                    image.style.maxWidth = "100%";
+                    console.log(src);
+                }
+                this.content = elem.innerHTML;
             }, function(ret){
                 this.content = "頁面不存在。";
             });
