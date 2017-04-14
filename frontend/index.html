@@ -3,6 +3,8 @@
     <title> 姆Q的奇妙歷險 </title>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.3.1/vue-resource.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
 </head>
 <body>
 
@@ -26,6 +28,7 @@ body{
     background-size: 100%;
     background-color: rgba(255,255,255,0.6);
     background-blend-mode: lighten;
+    background-attachment: fixed;
 
     font : Arial, '文泉驛正黑', 'WenQuanYi Zen Hei', '儷黑 Pro', 'LiHei Pro', '微軟正黑體', 'Microsoft JhengHei', sans-serif;
 }
@@ -90,6 +93,8 @@ body{
 
 <script>
 
+Vue.config.delimiters = ['${', '}'];
+
 index = {
     template : `
     <div>
@@ -98,18 +103,47 @@ index = {
         <div id="box" class="noselect">
             <router-link to="/blog/" tag="div" class="item"> 網誌區 </router-link>
             <router-link to="/piki/" tag="div" class="item"> 文件區 </router-link>
-            <router-link to="/piki/Mudream" tag="div" class="item"> 關於我 </router-link>
+            <router-link to="/aboutme/" tag="div" class="item"> 關於我 </router-link>
         </div>
     </div>
     `
 };
 
 piki = {
-    template : `
+    template : ` 
     <div class="white-space">
-        piki
+        <div v-html="content"></div>
     </div>
-    `
+    `,
+    watch : {
+        '$route' : function(){
+            this.fetchData();
+        }
+    },
+    created : function(){
+        this.fetchData();
+    },
+    data : function(){
+        return {
+            content : ""
+        };
+    },
+    methods : {
+        fetchData : function(){
+            val = this.$route.params.name;
+            if(val)
+                query_url = 'piki/' +  val + '/README.md';
+            else
+                query_url = 'piki/index/README.md';
+            this.$http.get(query_url)
+            .then(function(ret){
+                console.log(ret);
+                this.content = marked(ret.body);
+            }, function(ret){
+                this.content = "頁面不存在。";
+            });
+        },
+    },
 };
 
 blog = {
@@ -117,14 +151,17 @@ blog = {
     <div class="white-space">
         blog
     </div>
-    `
+    `,
+
 };
 
 router = new VueRouter({
     routes: [
         { path: '/', component: index },
         { path: '/blog/', component: blog },
-        { path: '/piki/', component: piki }
+        { path: '/piki/', component: piki },
+        { path: '/piki/:name', component: piki },
+        { path: '/aboutme/', redirect: '/piki/mudream' }
     ]
 });
 
