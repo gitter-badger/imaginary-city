@@ -131,14 +131,20 @@ piki = {
     methods : {
         fetchData : function(){
             var val = this.$route.params.name || "index";
-            query_url = 'piki/' +  val + '/README.md?v=6';
+            if(this.$route.params.namespace)
+                val = this.$route.params.namespace + "/" + val;
+            console.log("path", val);
+            query_url = 'piki/' +  val + '/README.md?v=a1';
             this.$http.get(query_url)
             .then(function(ret){
                 content = marked(ret.body);
                 var elem = document.createElement("div");
                 elem.innerHTML = content;
+                
+                // Rewrite image url
+
                 var images = elem.getElementsByTagName("img");
-                for(var i = 0;i < images.length;i++){
+                for(var i = 0; i < images.length; i++){
                     var image = images[i];
                     var src = image.getAttribute('src');
                     console.log(src);
@@ -146,8 +152,21 @@ piki = {
                         src = "/piki/" + val + "/" + src;
                     image.src = src;
                     image.style.maxWidth = "100%";
-                    console.log(src);
+                    //console.log(src);
                 }
+
+                // Rewrite link url
+
+                var links = elem.getElementsByTagName("a");
+                for(var i = 0; i < links.length; i++){
+                    var link = links[i];
+                    var href = link.getAttribute('href');
+                    if(href.startsWith("piki://"))
+                        href = "#/piki/" + href.substr(7);
+                    link.href = href;
+                    //console.log(href);
+                }
+
                 this.content = elem.innerHTML;
             }, function(ret){
                 this.content = "頁面不存在。";
@@ -171,6 +190,7 @@ router = new VueRouter({
         { path: '/blog/', component: blog },
         { path: '/piki/', component: piki },
         { path: '/piki/:name', component: piki },
+        { path: '/piki/:namespace/:name', component: piki },
         { path: '/aboutme/', redirect: '/piki/mudream' }
     ]
 });
