@@ -112,6 +112,7 @@ index = {
 piki = {
     template : ` 
     <div class="white-space">
+        <span v-for="p in path"> → <a :href="p.link">{{p.title}}</a> </span>
         <div v-html="content"></div>
     </div>
     `,
@@ -125,7 +126,8 @@ piki = {
     },
     data : function(){
         return {
-            content : ""
+            content : "",
+            path : [],
         };
     },
     methods : {
@@ -134,6 +136,17 @@ piki = {
             if(this.$route.params.namespace)
                 val = this.$route.params.namespace + "/" + val;
             console.log("path", val);
+            this.path = ("piki/" + val).split("/");
+
+            var pre_path = "#"
+            for(var i = 0;i < this.path.length;i++){
+                pre_path += "/" + this.path[i];
+                this.path[i] = {
+                    title : this.path[i],
+                    link : pre_path
+                };
+            }
+
             query_url = 'piki/' +  val + '/README.md?v=a1';
             this.$http.get(query_url)
             .then(function(ret){
