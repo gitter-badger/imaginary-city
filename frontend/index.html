@@ -93,6 +93,40 @@ body{
 
 <script>
 
+function markup(data, path){
+    content = marked(data);
+    var elem = document.createElement("div");
+    elem.innerHTML = content;
+
+    // Rewrite image url
+
+    var images = elem.getElementsByTagName("img");
+    for(var i = 0; i < images.length; i++){
+        var image = images[i];
+        var src = image.getAttribute('src');
+        console.log(src);
+        if(src.indexOf("//") == -1 && src[0] != "/")
+            src = "/piki/" + path + "/" + src;
+        image.src = src;
+        image.style.maxWidth = "100%";
+        //console.log(src);
+    }
+
+    // Rewrite link url
+
+    var links = elem.getElementsByTagName("a");
+    for(var i = 0; i < links.length; i++){
+        var link = links[i];
+        var href = link.getAttribute('href');
+        if(href.startsWith("piki://"))
+            href = "#/piki/" + href.substr(7);
+        link.href = href;
+        //console.log(href);
+    }
+    return elem.innerHTML;
+}
+
+
 Vue.config.delimiters = ['${', '}'];
 
 index = {
@@ -150,37 +184,7 @@ piki = {
             query_url = 'piki/' +  val + '/README.md?v=a1';
             this.$http.get(query_url)
             .then(function(ret){
-                content = marked(ret.body);
-                var elem = document.createElement("div");
-                elem.innerHTML = content;
-                
-                // Rewrite image url
-
-                var images = elem.getElementsByTagName("img");
-                for(var i = 0; i < images.length; i++){
-                    var image = images[i];
-                    var src = image.getAttribute('src');
-                    console.log(src);
-                    if(src.indexOf("//") == -1 && src[0] != "/")
-                        src = "/piki/" + val + "/" + src;
-                    image.src = src;
-                    image.style.maxWidth = "100%";
-                    //console.log(src);
-                }
-
-                // Rewrite link url
-
-                var links = elem.getElementsByTagName("a");
-                for(var i = 0; i < links.length; i++){
-                    var link = links[i];
-                    var href = link.getAttribute('href');
-                    if(href.startsWith("piki://"))
-                        href = "#/piki/" + href.substr(7);
-                    link.href = href;
-                    //console.log(href);
-                }
-
-                this.content = elem.innerHTML;
+                this.content = markup(ret.body, val);
             }, function(ret){
                 this.content = "頁面不存在。";
             });
@@ -191,16 +195,52 @@ piki = {
 blog = {
     template : `
     <div class="white-space">
-        blog
     </div>
     `,
+};
 
+blogpost = {
+    template : `
+    <div class="white-space">
+        <div v-html="content"></div>
+    </div>
+    `,
+    watch : {
+        '$route' : function(){
+            this.fetchData();
+        }
+    },
+    created : function(){
+        this.fetchData();
+    },
+    data : function(){
+        return {
+            content : "",
+        };
+    },
+    methods : {
+        fetchData : function(){
+            year = this.$route.params.year;
+            month = this.$route.params.month;
+            day = this.$route.params.day;
+            title = this.$route.params.title;
+            query_url = 'blog/' +  year + '/' + month + '/' + day + '/' + title + '/README.md?v=a1';
+            this.$http.get(query_url)
+            .then(function(ret){
+                this.content = markup(ret.body, "");
+            }, function(ret){
+                this.content = "頁面不存在。";
+            });
+        }
+    }
+     
 };
 
 router = new VueRouter({
     routes: [
         { path: '/', component: index },
         { path: '/blog/', component: blog },
+        { path: '/blog/:year/:month/:day/:title', component: blogpost },
         { path: '/piki/', component: piki },
         { path: '/piki/:name', component: piki },
         { path: '/piki/:namespace/:name', component: piki },
