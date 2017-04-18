@@ -1,0 +1,3 @@
+- filename : "test-blogpost"
+  title : "測試用Post"
+  datetime : !!timestamp '2017-04-17T13:12:11+08:00'

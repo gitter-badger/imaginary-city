@@ -195,8 +195,32 @@ piki = {
 blog = {
     template : `
     <div class="white-space">
+        <div v-html="content"></div>
     </div>
     `,
+    watch : {
+        '$route' : function(){
+            this.fetchData();
+        }
+    },
+    created : function(){
+        this.fetchData();
+    },
+    data : function(){
+        return {
+            content : "",
+        };
+    },
+    methods : {
+        fetchData : function(){
+            this.$http.get("/page/1.html")
+            .then(function(ret){
+                this.content = ret.body;
+            }, function(ret){
+                this.content = "頁面不存在。";
+            });
+        }
+    }
 };
 
 blogpost = {
