@@ -5,6 +5,9 @@
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="https://cdn.jsdelivr.net/vue.resource/1.3.1/vue-resource.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+
+    <script src="vendor/highlight/js/highlight.js"></script>
+    <link rel="stylesheet" href="vendor/highlight/css/tomorrow-night-eighties.css">
 </head>
 <body>
 
@@ -92,6 +95,13 @@ body{
 </div>
 
 <script>
+
+marked.setOptions({
+    highlight: function (code) {
+        return hljs.highlightAuto(code).value;
+    }
+});
+
 
 function markup(data, path){
     content = marked(data);
