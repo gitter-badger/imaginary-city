@@ -106,7 +106,7 @@ function markup(data, path){
         var src = image.getAttribute('src');
         console.log(src);
         if(src.indexOf("//") == -1 && src[0] != "/")
-            src = "/piki/" + path + "/" + src;
+            src = path + "/" + src;
         image.src = src;
         image.style.maxWidth = "100%";
         //console.log(src);
@@ -184,7 +184,7 @@ piki = {
             query_url = 'piki/' +  val + '/README.md?v=a1';
             this.$http.get(query_url)
             .then(function(ret){
-                this.content = markup(ret.body, val);
+                this.content = markup(ret.body, "/piki/" + val);
             }, function(ret){
                 this.content = "頁面不存在。";
             });
@@ -251,7 +251,7 @@ blogpost = {
             query_url = 'blog/' +  year + '/' + month + '/' + day + '/' + title + '/README.md?v=a1';
             this.$http.get(query_url)
             .then(function(ret){
-                this.content = markup(ret.body, "");
+                this.content = markup(ret.body, 'blog/' +  year + '/' + month + '/' + day + '/' + title);
             }, function(ret){
                 this.content = "頁面不存在。";
             });
