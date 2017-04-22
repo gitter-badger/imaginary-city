@@ -2,6 +2,7 @@ import tornado.ioloop
 import tornado.web
 
 import os
+import json
 
 from blogpost import BlogpostHandler
 
@@ -9,11 +10,19 @@ class RequestHandler(tornado.web.RequestHandler):
     pass
 
 
-class MainHandler(RequestHandler):
-    def get(self):
-        self.render("blogpost_list.html",
-            blogpost_list = BlogpostHandler.inst.list()
-        )
+class BlogHandler(RequestHandler):
+    def get(self, filepath):
+        if not filepath:
+            self.render("blogpost_list.html",
+                blogpost_list = BlogpostHandler.inst.list()
+            )
+        else:
+            self.render("blogpost.html",
+                filepath = filepath
+            )
+
+    def post(self, filepath):
+        self.finish(BlogpostHandler.inst.get(filepath))
 
 
 _settings = {
@@ -25,7 +34,7 @@ _settings = {
 
 
 application = tornado.web.Application([
-    (r"/", MainHandler),
+    (r"/blog/(.*)", BlogHandler),
     (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': "./static/"}),
 ], **_settings) 
 

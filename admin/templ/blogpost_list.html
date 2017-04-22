@@ -16,7 +16,7 @@
                     <td>%{blogpost.datetime.toString()}</td>
                     <td>%{blogpost.filename}</td>
                     <td>
-                        <button class="btn btn-primary">編輯</button>
+                        <button class="btn btn-primary" v-on:click="edit(getFilepath(blogpost))">編輯</button>
                         <button class="btn btn-warning">刪除</button>
                     </td>
                 </tr>
@@ -53,6 +53,15 @@ var app = new Vue({
             },
             {% end %}
         ]
+    },
+    methods: {
+        getFilepath : function(blogpost){
+            return blogpost.datetime.toISOString().slice(0,10).replace(/-/g,"/") +
+                   '/' + blogpost.filename;
+        },
+        edit : function(filepath){
+            window.location.href = '/blog/' + filepath;
+        }
     }
 });
 

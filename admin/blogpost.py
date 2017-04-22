@@ -14,3 +14,7 @@ class BlogpostHandler:
 
     def list(self):
         return self.blogpost_list
+
+    def get(self, filepath):
+        with open("../frontend/blog/" + filepath + "/README.md") as f:
+            return f.read()

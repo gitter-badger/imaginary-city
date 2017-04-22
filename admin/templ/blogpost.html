@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %} Blogpost : {{filepath}} {% end %}
+
+{% block body %}
+
+<style>
+
+#app, #editor, body, html {
+    margin: 0;
+    height: 100%;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #333;
+}
+
+textarea, #editor div {
+    display: inline-block;
+    width: 49%;
+    height: 100%;
+    vertical-align: top;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+#editor div{
+    overflow: auto;
+}
+
+textarea {
+    border: none;
+    border-right: 1px solid #ccc;
+    resize: none;
+    outline: none;
+    background-color: #f6f6f6;
+    font-size: 14px;
+    font-family: 'Monaco', courier, monospace;
+    padding: 20px;
+}
+
+code {
+      color: #f66;
+}
+</style>
+
+<div id="app">
+
+<div id="editor">
+    <textarea :value="blogpost" @input="updateBlogpost"></textarea>
+    <div v-html="markupBlogpost"></div>
+</div>
+
+</div>
+
+<script>
+
+Date.prototype.toString = function() {
+    var yyyy = this.getFullYear();
+    var mm = this.getMonth() < 9 ? "0" + (this.getMonth() + 1) : (this.getMonth() + 1); // getMonth() is zero-based
+    var dd  = this.getDate() < 10 ? "0" + this.getDate() : this.getDate();
+    var hh = this.getHours() < 10 ? "0" + this.getHours() : this.getHours();
+    var min = this.getMinutes() < 10 ? "0" + this.getMinutes() : this.getMinutes();
+    var ss = this.getSeconds() < 10 ? "0" + this.getSeconds() : this.getSeconds();
+    return "".concat(yyyy).concat("/").concat(mm).concat("/").concat(dd).concat(" ")
+             .concat(hh).concat(":").concat(min).concat(":").concat(ss);
+};
+
+var app = new Vue({
+    el: '#app',
+    delimiters: ["%{","}"],
+    data: {
+        blogpost : "",
+        filepath : "{{filepath}}",
+    },
+    computed : {
+        markupBlogpost : function(){
+            return marked(this.blogpost);
+        }
+    },
+    created : function(){
+        var _this = this;
+        this.$http.post("/blog/" + this.filepath)
+        .then(function(ret){
+            _this.blogpost = ret.body; 
+        }, function(ret){
+            _this.blogpost = "";
+        });
+    },
+    methods : {
+        updateBlogpost: _.debounce(function (e) {
+            this.blogpost = e.target.value
+        }, 300)
+    }
+});
+
+</script>
+
+{% end %}
