@@ -3,12 +3,17 @@ import tornado.web
 
 import os
 
+from blogpost import BlogpostHandler
+
 class RequestHandler(tornado.web.RequestHandler):
     pass
 
+
 class MainHandler(RequestHandler):
     def get(self):
-        self.render("blogpost_list.html")
+        self.render("blogpost_list.html",
+            blogpost_list = BlogpostHandler.inst.list()
+        )
 
 
 _settings = {
@@ -27,4 +32,5 @@ application = tornado.web.Application([
 
 if __name__ == "__main__":
     application.listen(8888)
+    BlogpostHandler()
     tornado.ioloop.IOLoop.current().start()

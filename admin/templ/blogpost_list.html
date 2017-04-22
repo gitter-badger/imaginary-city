@@ -2,5 +2,60 @@
 {% block title %} Blogpost 列表 {% end %}
 
 {% block body %}
-123
+<div id="app">
+
+<div class="row">
+    <div class="col-md-offset-3 col-md-6">
+        <table class="table">
+            <thead>
+                <tr><td>標題</td> <td>日期</td> <td>檔案名稱</td> <td>操作</td></tr>
+            </thead>
+            <tbody>
+                <tr v-for="blogpost in blogpost_list">
+                    <td>%{blogpost.title}</td>
+                    <td>%{blogpost.datetime.toString()}</td>
+                    <td>%{blogpost.filename}</td>
+                    <td>
+                        <button class="btn btn-primary">編輯</button>
+                        <button class="btn btn-warning">刪除</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</div>
+
+<script>
+
+Date.prototype.toString = function() {
+    var yyyy = this.getFullYear();
+    var mm = this.getMonth() < 9 ? "0" + (this.getMonth() + 1) : (this.getMonth() + 1); // getMonth() is zero-based
+    var dd  = this.getDate() < 10 ? "0" + this.getDate() : this.getDate();
+    var hh = this.getHours() < 10 ? "0" + this.getHours() : this.getHours();
+    var min = this.getMinutes() < 10 ? "0" + this.getMinutes() : this.getMinutes();
+    var ss = this.getSeconds() < 10 ? "0" + this.getSeconds() : this.getSeconds();
+    return "".concat(yyyy).concat("/").concat(mm).concat("/").concat(dd).concat(" ")
+             .concat(hh).concat(":").concat(min).concat(":").concat(ss);
+};
+
+var app = new Vue({
+    el: '#app',
+    delimiters: ["%{","}"],
+    data: {
+        blogpost_list : [
+            {% for blogpost in blogpost_list %}
+            {
+                title : '{{blogpost["title"]}}',
+                filename : '{{blogpost["filename"]}}',
+                datetime : new Date('{{blogpost["datetime"].isoformat()}}')
+            },
+            {% end %}
+        ]
+    }
+});
+
+</script>
+
 {% end %}
