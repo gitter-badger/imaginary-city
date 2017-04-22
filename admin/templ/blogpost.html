@@ -52,6 +52,30 @@ code {
 
 <script>
 
+function markup(data, path){
+    content = marked(data);
+    var elem = document.createElement("div");
+    elem.innerHTML = content;
+
+    // Rewrite image url
+
+    var images = elem.getElementsByTagName("img");
+    for(var i = 0; i < images.length; i++){
+        var image = images[i];
+        var src = image.getAttribute('src');
+        console.log(src);
+        if(src.indexOf("//") == -1 && src[0] != "/")
+            src = path + "/" + src;
+        image.src = src;
+        image.style.maxWidth = "100%";
+        //console.log(src);
+    }
+
+    // Rewrite link url
+
+    return elem.innerHTML;
+}
+
 Date.prototype.toString = function() {
     var yyyy = this.getFullYear();
     var mm = this.getMonth() < 9 ? "0" + (this.getMonth() + 1) : (this.getMonth() + 1); // getMonth() is zero-based
@@ -72,7 +96,7 @@ var app = new Vue({
     },
     computed : {
         markupBlogpost : function(){
-            return marked(this.blogpost);
+            return markup(this.blogpost, "/blogdb/" + this.filepath);
         }
     },
     created : function(){

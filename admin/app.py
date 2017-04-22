@@ -36,6 +36,7 @@ _settings = {
 application = tornado.web.Application([
     (r"/blog/(.*)", BlogHandler),
     (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': "./static/"}),
+    (r'/blogdb/(.*)', tornado.web.StaticFileHandler, {'path': "../frontend/blog/"}),
 ], **_settings) 
 
 
