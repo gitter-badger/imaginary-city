@@ -222,7 +222,7 @@ piki = {
                 };
             }
 
-            query_url = 'piki/' +  val + '/README.md?v=a1';
+            query_url = 'piki/' +  val + '/README.md';
             this.$http.get(query_url)
             .then(function(ret){
                 this.content = markup(ret.body, "/piki/" + val);
