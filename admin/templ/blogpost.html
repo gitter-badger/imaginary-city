@@ -5,11 +5,31 @@
 
 <style>
 
-#app, #editor, body, html {
+body, html{
     margin: 0;
     height: 100%;
     font-family: 'Helvetica Neue', Arial, sans-serif;
     color: #333;
+}
+
+#navbar {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: 40px;
+    padding: 2px;
+}
+
+#app{
+    height: 100%;
+}
+
+#editor{
+    height: 92%;
+    width: 100%;
+    position: absolute;
+    top: 40px;
 }
 
 textarea, #editor div {
@@ -39,9 +59,14 @@ textarea {
 code {
       color: #f66;
 }
+
 </style>
 
 <div id="app">
+
+<div id="navbar">
+    <button class="btn btn-warning" @click="leave">離開</button>
+</div>
 
 <div id="editor">
     <textarea :value="blogpost" @input="updateBlogpost"></textarea>
@@ -101,17 +126,35 @@ var app = new Vue({
     },
     created : function(){
         var _this = this;
-        this.$http.post("/blog/" + this.filepath)
-        .then(function(ret){
+        this.$http.post("/blog/" + this.filepath, {}, {
+            params : {
+                method : "getPost"
+            }
+        }).then(function(ret){
             _this.blogpost = ret.body; 
         }, function(ret){
             _this.blogpost = "";
         });
     },
+    ready : function(){
+    },
     methods : {
         updateBlogpost: _.debounce(function (e) {
-            this.blogpost = e.target.value
-        }, 300)
+            this.blogpost = e.target.value;
+            this.save();
+        }, 500),
+        save : function(){
+            var _this = this;
+            this.$http.post("/blog/" + this.filepath, {}, {
+                params:{
+                    method : "updatePost",
+                    md : this.blogpost
+                }
+            });
+        },
+        leave : function(){
+            window.location.href = "/blog/";
+        }
     }
 });
 

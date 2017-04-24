@@ -22,7 +22,13 @@ class BlogHandler(RequestHandler):
             )
 
     def post(self, filepath):
-        self.finish(BlogpostHandler.inst.get(filepath))
+        method = self.get_argument("method")
+
+        if method == "getPost":
+            self.finish(BlogpostHandler.inst.get(filepath))
+        elif method == "updatePost":
+            md = self.get_argument("md", default="")
+            BlogpostHandler.inst.updatePost(filepath, md)
 
 
 _settings = {

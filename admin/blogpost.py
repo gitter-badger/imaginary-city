@@ -18,3 +18,7 @@ class BlogpostHandler:
     def get(self, filepath):
         with open("../frontend/blog/" + filepath + "/README.md") as f:
             return f.read()
+
+    def updatePost(self, filepath, md):
+        with open("../frontend/blog/" + filepath + "/README.md", "w") as f:
+            f.write(md)
