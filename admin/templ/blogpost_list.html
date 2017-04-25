@@ -6,15 +6,16 @@
 
 <div class="row">
     <div class="col-md-offset-3 col-md-6">
+        <bs-input :value.sync="create_post.filename"></bs-input>
         <table class="table">
             <thead>
                 <tr><td>標題</td> <td>日期</td> <td>檔案名稱</td> <td>操作</td></tr>
             </thead>
             <tbody>
                 <tr v-for="blogpost in blogpost_list">
-                    <td>%{blogpost.title}</td>
-                    <td>%{blogpost.datetime.toString()}</td>
-                    <td>%{blogpost.filename}</td>
+                    <td>%[blogpost.title]</td>
+                    <td>%[blogpost.datetime.toString()]</td>
+                    <td>%[blogpost.filename]</td>
                     <td>
                         <button class="btn btn-primary" v-on:click="edit(getFilepath(blogpost))">編輯</button>
                         <button class="btn btn-warning">刪除</button>
@@ -40,9 +41,14 @@ Date.prototype.toString = function() {
              .concat(hh).concat(":").concat(min).concat(":").concat(ss);
 };
 
+Vue.config.delimiters = ['%[', ']'];
+
 var app = new Vue({
     el: '#app',
-    delimiters: ["%{","}"],
+    delimiters: ["%[","]"],
+    components: {
+        bsInput: VueStrap.input
+    },
     data: {
         blogpost_list : [
             {% for blogpost in blogpost_list %}
@@ -52,7 +58,10 @@ var app = new Vue({
                 datetime : new Date('{{blogpost["datetime"].isoformat()}}')
             },
             {% end %}
-        ]
+        ],
+        create_post : {
+            filename : "",
+        }
     },
     methods: {
         getFilepath : function(blogpost){
