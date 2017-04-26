@@ -37,10 +37,12 @@ class BlogpostHandler:
         with open("../frontend/blog/" + filepath + "/README.md", "w") as f:
             f.write("# NoTitle")
 
-        self.blogpost_list.append({
+        blogpost = {
             "filename" : filepath.split("/")[-1],
             "title" : filepath.split("/")[-1],
-            "datetime" : datetime.datetime.now() 
-        })
-
+            "datetime" : datetime.datetime.now()
+        }
+        self.blogpost_list.append(blogpost)
         self.pushList()
+
+        return None, blogpost

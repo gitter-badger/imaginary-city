@@ -109,9 +109,7 @@ var app = new Vue({
             window.location.href = '/blog/' + filepath;
         },
         submitCreatePost : function(){
-            console.log(this.create_post.year + "/" +
-                        this.create_post.month + "/" +
-                        this.create_post.day + "/" + this.create_post.filename);
+            var _this = this;
             this.$http.post("/blog/" + this.create_post.year + "/" +
                                        this.create_post.month + "/" +
                                        this.create_post.day + "/" + this.create_post.filename, 
@@ -119,6 +117,10 @@ var app = new Vue({
                 params:{
                     method : "createPost",
                 }
+            }).then(function(ret){
+                res = JSON.parse(ret.bodyText);
+                res.datetime = new Date(res.datetime);
+                _this.blogpost_list.push(res);
             });
         },
     }

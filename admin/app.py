@@ -3,8 +3,18 @@ import tornado.web
 
 import os
 import json
+import datetime
 
 from blogpost import BlogpostHandler
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime.datetime) or isinstance(o, datetime.time):
+            return o.isoformat()
+
+        return json.JSONEncoder.default(self, o)
+
 
 class RequestHandler(tornado.web.RequestHandler):
     pass
@@ -31,7 +41,8 @@ class BlogHandler(RequestHandler):
             md = self.get_argument("md", default="")
             BlogpostHandler.inst.updatePost(filepath, md)
         elif method == "createPost":
-            BlogpostHandler.inst.createPost(filepath)
+            err, blogpost = BlogpostHandler.inst.createPost(filepath)
+            self.finish(err or json.dumps(blogpost, cls=DateTimeEncoder))
 
 
 _settings = {
