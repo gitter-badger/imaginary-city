@@ -39,7 +39,7 @@ class BlogpostHandler:
 
         self.blogpost_list.append({
             "filename" : filepath.split("/")[-1],
-            "title" : "Notitle",
+            "title" : filepath.split("/")[-1],
             "datetime" : datetime.datetime.now() 
         })
 
