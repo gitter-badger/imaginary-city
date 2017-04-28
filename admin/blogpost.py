@@ -61,13 +61,36 @@ class BlogpostHandler:
     def list(self):
         return self.blogpost_list
 
-    def get(self, filepath):
-        with open("../frontend/blog/" + filepath + "/README.md") as f:
-            return f.read()
+    def _getBlogpost(self, filepath):
+        for blogpost in self.blogpost_list:
+            dt = blogpost["datetime"]
+            part = filepath.split("/")
+            if blogpost["filename"] == part[3] and dt.year == int(part[0]) and dt.month == int(part[1]) and dt.day == int(part[2]) :
+                return blogpost
 
-    def updatePost(self, filepath, md):
+        return None
+
+    def get(self, filepath):
+        blogpost = self._getBlogpost(filepath)
+
+        with open("../frontend/blog/" + filepath + "/README.md") as f:
+            blogpost["md"] = f.read()
+        
+        return blogpost
+
+    def updatePostMD(self, filepath, md):
         with open("../frontend/blog/" + filepath + "/README.md", "w") as f:
             f.write(md)
+
+    def updatePostTitle(self, filepath, title):
+        for blogpost in self.blogpost_list:
+            dt = blogpost["datetime"]
+            part = filepath.split("/")
+            if blogpost["filename"] == part[3] and dt.year == int(part[0]) and dt.month == int(part[1]) and dt.day == int(part[2]) :
+                blogpost["title"] = title
+                break
+
+        self.pushList()
 
     def createPost(self, filepath):
         os.makedirs("../frontend/blog/" + filepath + "/", exist_ok = True)

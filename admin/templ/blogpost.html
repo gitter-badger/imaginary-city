@@ -12,14 +12,14 @@ body, html{
     color: #333;
 }
 
-#navbar {
+/*#navbar {
     position: absolute;
     left: 0px;
     right: 0px;
     width: 100%;
     height: 40px;
     padding: 2px;
-}
+}*/
 
 #app{
     height: 100%;
@@ -43,6 +43,7 @@ textarea, #editor div {
 
 #editor div{
     overflow: auto;
+    padding-top: 0px;
 }
 
 textarea {
@@ -64,9 +65,16 @@ code {
 
 <div id="app">
 
-<div id="navbar">
-    <button class="btn btn-warning" @click="leave">離開</button>
-</div>
+<navbar placement="static" type="default">
+    <li slot="left">
+        <form class="form-inline navbar-form">
+            <bs-input label="標題" v-model="title" @input="updateTitle"></bs-input>
+        </form>
+    </li>
+    <li slot="left">
+        <a @click="leave" href="#">離開</a>
+    </li>
+</navbar>
 
 <div id="editor">
     <textarea :value="blogpost" @input="updateBlogpost"></textarea>
@@ -117,7 +125,12 @@ var app = new Vue({
     delimiters: ["%{","}"],
     data: {
         blogpost : "",
+        title : "",
         filepath : "{{filepath}}",
+    },
+    components: {
+        bsInput: VueStrap.input,
+        navbar: VueStrap.navbar,
     },
     computed : {
         markupBlogpost : function(){
@@ -131,7 +144,8 @@ var app = new Vue({
                 method : "getPost"
             }
         }).then(function(ret){
-            _this.blogpost = ret.body; 
+            _this.blogpost = ret.body.md;
+            _this.title = ret.body.title;
         }, function(ret){
             _this.blogpost = "";
         });
@@ -141,14 +155,26 @@ var app = new Vue({
     methods : {
         updateBlogpost: _.debounce(function (e) {
             this.blogpost = e.target.value;
-            this.save();
+            this.saveBlogpost();
         }, 500),
-        save : function(){
+        updateTitle: _.debounce(function (e) {
+            this.saveTitle();
+        }, 500),
+        saveBlogpost : function(){
             var _this = this;
             this.$http.post("/blog/" + this.filepath, {}, {
                 params:{
                     method : "updatePost",
-                    md : this.blogpost
+                    md : this.blogpost,
+                }
+            });
+        },
+        saveTitle : function(){
+            var _this = this;
+            this.$http.post("/blog/" + this.filepath, {}, {
+                params:{
+                    method : "updatePost",
+                    title : this.title,
                 }
             });
         },

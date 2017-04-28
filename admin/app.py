@@ -35,12 +35,19 @@ class BlogHandler(RequestHandler):
         method = self.get_argument("method")
 
         if method == "getPost":
-            self.finish(BlogpostHandler.inst.get(filepath))
+            self.finish(json.dumps(BlogpostHandler.inst.get(filepath), cls=DateTimeEncoder))
         elif method == "pushPage":
             BlogpostHandler.inst.pushPage()
         elif method == "updatePost":
-            md = self.get_argument("md", default="")
-            BlogpostHandler.inst.updatePost(filepath, md)
+            md = self.get_argument("md", default=None)
+            title = self.get_argument("title", default=None)
+
+            if md is not None :
+                BlogpostHandler.inst.updatePostMD(filepath, md)
+
+            if title is not None :
+                BlogpostHandler.inst.updatePostTitle(filepath, title)
+
         elif method == "createPost":
             err, blogpost = BlogpostHandler.inst.createPost(filepath)
             self.finish(err or json.dumps(blogpost, cls=DateTimeEncoder))
