@@ -19,7 +19,7 @@
                     <td>%[blogpost.filename]</td>
                     <td>
                         <button class="btn btn-primary" @click="editPost(blogpost)"  >編輯</button>
-                        <button class="btn btn-warning" @click="deletePost(blogpost)">刪除</button>
+                        <button class="btn btn-warning" @click="toDeletePost(blogpost)">刪除</button>
                     </td>
                 </tr>
             </tbody>
@@ -43,6 +43,19 @@
         <button type="button" class="btn btn-success" @click="submitCreatePost(); create_post.show_modal=false;">確定</button>
     </div>
 </modal>
+
+<modal v-model="delete_post.show_modal">
+    <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title"> 刪除 Post </h4>
+    </div>
+    警告：此操作將無法還原。
+
+    <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click="delete_post.show_modal=false">取消</button>
+        <button type="button" class="btn btn-warning" @click="deletePost(delete_post.blogpost); delete_post.show_modal=false;">確定</button>
+    </div>
+</modal>
+
 
 </div>
 
@@ -86,7 +99,11 @@ var app = new Vue({
             month : 0,
             day : 0,
             filename : "",
-        }
+        },
+        delete_post : {
+            show_modal : false,
+            blogpost : null,
+        },
     },
     created: function(){
         this.initialCreatePost();
@@ -108,6 +125,10 @@ var app = new Vue({
         },
         editPost : function(blogpost){
             window.location.href = '/blog/' + this.getFilepath(blogpost);
+        },
+        toDeletePost : function(blogpost){
+            this.delete_post.show_modal = true;
+            this.delete_post.blogpost = blogpost;
         },
         deletePost : function(blogpost){
             var _this = this;
