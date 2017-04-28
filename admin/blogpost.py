@@ -71,7 +71,7 @@ class BlogpostHandler:
         return None
 
     def get(self, filepath):
-        blogpost = self._getBlogpost(filepath)
+        blogpost = self._getBlogpost(filepath).copy()
 
         with open("../frontend/blog/" + filepath + "/README.md") as f:
             blogpost["md"] = f.read()
@@ -83,13 +83,8 @@ class BlogpostHandler:
             f.write(md)
 
     def updatePostTitle(self, filepath, title):
-        for blogpost in self.blogpost_list:
-            dt = blogpost["datetime"]
-            part = filepath.split("/")
-            if blogpost["filename"] == part[3] and dt.year == int(part[0]) and dt.month == int(part[1]) and dt.day == int(part[2]) :
-                blogpost["title"] = title
-                break
-
+        blogpost = self._getBlogpost(filepath)
+        blogpost["title"] = title
         self.pushList()
 
     def createPost(self, filepath):
@@ -110,11 +105,7 @@ class BlogpostHandler:
         return None, blogpost
 
     def deletePost(self, filepath):
-        for blogpost in self.blogpost_list:
-            dt = blogpost["datetime"]
-            part = filepath.split("/")
-            if blogpost["filename"] == part[3] and dt.year == int(part[0]) and dt.month == int(part[1]) and dt.day == int(part[2]) :
-                self.blogpost_list.remove(blogpost)
-                break
+        blogpost = self._getBlogpost(filepath)
+        self.blogpost_list.remove(blogpost)
         shutil.rmtree("../frontend/blog/" + filepath)
         self.pushList()
