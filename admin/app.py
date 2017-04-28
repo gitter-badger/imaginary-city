@@ -33,10 +33,11 @@ class BlogHandler(RequestHandler):
 
     def post(self, filepath):
         method = self.get_argument("method")
-        print(filepath)
 
         if method == "getPost":
             self.finish(BlogpostHandler.inst.get(filepath))
+        elif method == "pushPage":
+            BlogpostHandler.inst.pushPage()
         elif method == "updatePost":
             md = self.get_argument("md", default="")
             BlogpostHandler.inst.updatePost(filepath, md)

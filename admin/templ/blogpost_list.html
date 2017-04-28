@@ -7,6 +7,7 @@
 <div class="row">
     <div class="col-md-offset-3 col-md-6">
         <button class="btn btn-primary" @click="create_post.show_modal=true">新增Post</button>
+        <button class="btn btn-primary" @click="pushPage">Post Paging</button>
         <table class="table">
             <thead>
                 <tr><td>標題</td> <td>日期</td> <td>檔案名稱</td> <td>操作</td></tr>
@@ -118,6 +119,15 @@ var app = new Vue({
             }).then(function(ret){
                 ind = _this.blogpost_list.indexOf(blogpost);
                 _this.blogpost_list.splice(ind, 1);
+            });
+        },
+        pushPage : function(){
+            var _this = this;
+            this.$http.post("/blog/",
+                {}, {
+                params:{
+                    method : "pushPage",
+                }
             });
         },
         submitCreatePost : function(){
