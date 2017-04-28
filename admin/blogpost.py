@@ -20,7 +20,7 @@ class BlogpostHandler:
 
     def pushList(self):
         with open("../database/blog.yaml", "w") as f:
-            yaml.dump(self.blogpost_list, f, default_flow_style=False)
+            yaml.dump(self.blogpost_list, f, default_flow_style=False, allow_unicode=True)
 
     def pushPage(self):
         page = open("../frontend/page/1.html", "w")
