@@ -43,6 +43,8 @@ class BlogHandler(RequestHandler):
         elif method == "createPost":
             err, blogpost = BlogpostHandler.inst.createPost(filepath)
             self.finish(err or json.dumps(blogpost, cls=DateTimeEncoder))
+        elif method == "deletePost":
+            BlogpostHandler.inst.deletePost(filepath)
 
 
 _settings = {

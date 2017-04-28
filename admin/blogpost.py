@@ -1,6 +1,7 @@
 import dateutil.parser
 import yaml
 import os
+import shutil
 import datetime
 
 def timestamp_constructor(loader, node):
@@ -46,3 +47,13 @@ class BlogpostHandler:
         self.pushList()
 
         return None, blogpost
+
+    def deletePost(self, filepath):
+        for blogpost in self.blogpost_list:
+            dt = blogpost["datetime"]
+            part = filepath.split("/")
+            if blogpost["filename"] == part[-1] and dt.year == int(part[0]) and dt.month == int(part[1]) and dt.day == int(part[2]) :
+                self.blogpost_list.remove(blogpost)
+                break
+        shutil.rmtree("../frontend/blog/" + filepath)
+        self.pushList()

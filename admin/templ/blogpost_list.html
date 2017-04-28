@@ -17,8 +17,8 @@
                     <td>%[blogpost.datetime.toString()]</td>
                     <td>%[blogpost.filename]</td>
                     <td>
-                        <button class="btn btn-primary" @click="edit(getFilepath(blogpost))">編輯</button>
-                        <button class="btn btn-warning">刪除</button>
+                        <button class="btn btn-primary" @click="editPost(blogpost)"  >編輯</button>
+                        <button class="btn btn-warning" @click="deletePost(blogpost)">刪除</button>
                     </td>
                 </tr>
             </tbody>
@@ -105,8 +105,20 @@ var app = new Vue({
             return blogpost.datetime.toISOString().slice(0,10).replace(/-/g,"/") +
                    '/' + blogpost.filename;
         },
-        edit : function(filepath){
-            window.location.href = '/blog/' + filepath;
+        editPost : function(blogpost){
+            window.location.href = '/blog/' + this.getFilepath(blogpost);
+        },
+        deletePost : function(blogpost){
+            var _this = this;
+            this.$http.post("/blog/" + this.getFilepath(blogpost),
+                {}, {
+                params:{
+                    method : "deletePost",
+                }
+            }).then(function(ret){
+                ind = _this.blogpost_list.indexOf(blogpost);
+                _this.blogpost_list.splice(ind, 1);
+            });
         },
         submitCreatePost : function(){
             var _this = this;
