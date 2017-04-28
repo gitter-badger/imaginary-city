@@ -6,23 +6,8 @@
 <style>
 
 body, html{
-    margin: 0;
-    height: 100%;
     font-family: 'Helvetica Neue', Arial, sans-serif;
     color: #333;
-}
-
-/*#navbar {
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    width: 100%;
-    height: 40px;
-    padding: 2px;
-}*/
-
-#app{
-    height: 100%;
 }
 
 #editor{
@@ -39,11 +24,12 @@ textarea, #editor div {
     vertical-align: top;
     box-sizing: border-box;
     padding: 0 20px;
+    margin-top: 0px;
 }
 
 #editor div{
     overflow: auto;
-    padding-top: 0px;
+    margin-top: 20px;
 }
 
 textarea {
@@ -71,6 +57,10 @@ code {
             <bs-input label="標題" v-model="title" @input="updateTitle"></bs-input>
         </form>
     </li>
+    <dropdown text="圖片">
+        <li><a href="#" @click="img_ctrl.show=true">圖片一</a></li>
+        <li><a href="#">圖片二</a></li>
+    </dropdown>
     <li slot="left">
         <a @click="leave" href="#">離開</a>
     </li>
@@ -80,6 +70,18 @@ code {
     <textarea :value="blogpost" @input="updateBlogpost"></textarea>
     <div v-html="markupBlogpost"></div>
 </div>
+
+<modal v-model="img_ctrl.show">
+    <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title"> 圖片: %{img_ctrl.filename} </h4>
+    </div>
+
+    <img style="max-width:100%" :src="img_ctrl.filename"/>
+
+    <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click="img_ctrl.show=false">關閉</button>
+    </div>
+</modal>
 
 </div>
 
@@ -127,10 +129,16 @@ var app = new Vue({
         blogpost : "",
         title : "",
         filepath : "{{filepath}}",
+        img_ctrl : {
+            show : false,
+            filename : "",
+        }
     },
     components: {
         bsInput: VueStrap.input,
         navbar: VueStrap.navbar,
+        dropdown : VueStrap.dropdown,
+        modal : VueStrap.modal,
     },
     computed : {
         markupBlogpost : function(){
