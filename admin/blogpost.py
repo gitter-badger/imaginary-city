@@ -23,7 +23,7 @@ class BlogpostHandler:
             yaml.dump(self.blogpost_list, f, default_flow_style=False, allow_unicode=True)
 
     def pushPage(self):
-        page = open("../frontend/page/1.html", "w")
+        page = open("../frontend/page/1.html", "w", encoding="utf-8")
         for blogpost in sorted(self.blogpost_list, key=lambda x : x["datetime"], reverse=True):
             dt = blogpost["datetime"]
             folder = "%04d/%02d/%02d/%s" % (dt.year, dt.month, dt.day, blogpost["filename"])
