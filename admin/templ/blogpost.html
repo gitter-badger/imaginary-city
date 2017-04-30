@@ -58,8 +58,9 @@ code {
         </form>
     </li>
     <dropdown text="圖片">
-        <li><a href="#" @click="img_ctrl.show=true">圖片一</a></li>
-        <li><a href="#">圖片二</a></li>
+        <li v-for="img in image_list">
+            <a href="#" @click="img_ctrl.show=true;img_ctrl.filename=img;">%{img}</a>
+        </li>
     </dropdown>
     <li slot="left">
         <a @click="leave" href="#">離開</a>
@@ -76,7 +77,7 @@ code {
         <h4 class="modal-title"> 圖片: %{img_ctrl.filename} </h4>
     </div>
 
-    <img style="max-width:100%" :src="img_ctrl.filename"/>
+    <img style="max-width:100%" :src="'/blogdb/' + filepath + '/' + img_ctrl.filename"/>
 
     <div slot="modal-footer" class="modal-footer">
         <button type="button" class="btn btn-default" @click="img_ctrl.show=false">關閉</button>
@@ -129,6 +130,7 @@ var app = new Vue({
         blogpost : "",
         title : "",
         filepath : "{{filepath}}",
+        image_list : [],
         img_ctrl : {
             show : false,
             filename : "",
@@ -156,6 +158,14 @@ var app = new Vue({
             _this.title = ret.body.title;
         }, function(ret){
             _this.blogpost = "";
+        });
+
+        this.$http.post("/image/" + this.filepath, {}, {
+            params : {
+                method : "listImage"
+            }
+        }).then(function(ret){
+            _this.image_list = ret.body;
         });
     },
     ready : function(){

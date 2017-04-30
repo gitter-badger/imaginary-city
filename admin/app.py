@@ -6,6 +6,7 @@ import json
 import datetime
 
 from blogpost import BlogpostHandler
+from image import ImageHandler
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -20,7 +21,7 @@ class RequestHandler(tornado.web.RequestHandler):
     pass
 
 
-class BlogHandler(RequestHandler):
+class BlogServer(RequestHandler):
     def get(self, filepath):
         if not filepath:
             self.render("blogpost_list.html",
@@ -55,6 +56,15 @@ class BlogHandler(RequestHandler):
             BlogpostHandler.inst.deletePost(filepath)
 
 
+class ImageServer(RequestHandler):
+    def post(self, filepath):
+        method = self.get_argument("method")
+
+        if method == "listImage":
+            image_list = ImageHandler.inst.listImage(filepath) 
+            self.finish(json.dumps(image_list))
+
+
 _settings = {
     "static_path" : os.path.join(os.path.dirname(__file__), "static"),
     "template_path" : os.path.join(os.path.dirname(__file__), "templ"),
@@ -64,7 +74,8 @@ _settings = {
 
 
 application = tornado.web.Application([
-    (r"/blog/(.*)", BlogHandler),
+    (r"/blog/(.*)", BlogServer),
+    (r"/image/(.*)", ImageServer),
     (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': "./static/"}),
     (r'/blogdb/(.*)', tornado.web.StaticFileHandler, {'path': "../frontend/blog/"}),
 ], **_settings) 
@@ -73,4 +84,5 @@ application = tornado.web.Application([
 if __name__ == "__main__":
     application.listen(8888)
     BlogpostHandler()
+    ImageHandler()
     tornado.ioloop.IOLoop.current().start()
