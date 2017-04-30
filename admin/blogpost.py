@@ -15,7 +15,7 @@ class BlogpostHandler:
         self.pullList()
 
     def pullList(self):
-        with open("../database/blog.yaml") as f:            
+        with open("../database/blog.yaml", encoding="utf-8") as f:
             self.blogpost_list = yaml.load(f.read())
 
     def pushList(self):
@@ -24,7 +24,7 @@ class BlogpostHandler:
 
     def pushPage(self):
         page = open("../frontend/page/1.html", "w")
-        for blogpost in self.blogpost_list:
+        for blogpost in sorted(self.blogpost_list, key=lambda x : x["datetime"], reverse=True):
             dt = blogpost["datetime"]
             folder = "%04d/%02d/%02d/%s" % (dt.year, dt.month, dt.day, blogpost["filename"])
 
