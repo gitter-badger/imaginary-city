@@ -36,7 +36,7 @@ class BlogpostHandler:
                 (folder, blogpost["title"])
             )
 
-            with open("../frontend/blog/%s/README.md" % (folder,)) as md:
+            with open("../frontend/blog/%s/README.md" % (folder,), encoding="utf-8") as md:
                 preview_content = ""
                 get_line = 0
                 new_line = False
