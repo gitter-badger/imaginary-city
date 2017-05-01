@@ -61,6 +61,7 @@ code {
         <li v-for="img in image_list">
             <a href="#" @click="img_ctrl.show=true;img_ctrl.filename=img;">%{img}</a>
         </li>
+        <li><a href="#" @click="img_upload.show=true;">上傳圖片</a></li>
     </dropdown>
     <li slot="left">
         <a @click="leave" href="#">離開</a>
@@ -81,6 +82,22 @@ code {
 
     <div slot="modal-footer" class="modal-footer">
         <button type="button" class="btn btn-default" @click="img_ctrl.show=false">關閉</button>
+    </div>
+</modal>
+
+<modal v-model="img_upload.show">
+    <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title"> 上傳圖片 </h4>
+    </div>
+    <div>
+    <input label="file" type="file" @change.prevent="setImage"/>
+    </div>
+    <div>
+    <bs-input label="filename" type="text" v-model="img_upload.filename"/>
+    </div>
+    <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click="img_upload.show=false">取消</button>
+        <button type="button" class="btn btn-primary" @click="img_upload.show=false;uploadFile();">上傳</button>
     </div>
 </modal>
 
@@ -134,7 +151,12 @@ var app = new Vue({
         img_ctrl : {
             show : false,
             filename : "",
-        }
+        },
+        img_upload : {
+            show : false,
+            file : null,
+            filename : ""
+        },
     },
     components: {
         bsInput: VueStrap.input,
@@ -194,6 +216,19 @@ var app = new Vue({
                     method : "updatePost",
                     title : this.title,
                 }
+            });
+        },
+        setImage : function(e){
+            this.img_upload.file = e.target.files[0];
+        },
+        uploadFile : function(){
+            data = new FormData();
+            data.append('file', this.img_upload.file);
+            data.append('filename', this.img_upload.filename);
+            data.append('method', "uploadImage");
+            this.image_list.push(this.img_upload.filename);
+            this.$http.post("/image/" + this.filepath, data).then(function(){ 
+                console.log('success!');
             });
         },
         leave : function(){

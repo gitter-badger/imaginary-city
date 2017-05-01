@@ -59,10 +59,16 @@ class BlogServer(RequestHandler):
 class ImageServer(RequestHandler):
     def post(self, filepath):
         method = self.get_argument("method")
+        print(method, filepath)
 
         if method == "listImage":
             image_list = ImageHandler.inst.listImage(filepath) 
             self.finish(json.dumps(image_list))
+
+        elif method == "uploadImage":
+            upload_file = self.request.files['file'][0]
+            filename = self.get_argument("filename")
+            ImageHandler.inst.uploadImage(filepath, filename, upload_file['body'])
 
 
 _settings = {
