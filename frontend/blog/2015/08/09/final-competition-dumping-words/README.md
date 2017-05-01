@@ -61,7 +61,7 @@ def get_like_count(id):
 
 生成網頁的長這樣(2015/08/09抓的)
 
-![螢幕快照 2015-08-09 下午8.25.13.png](http://user-image.logdown.io/user/9625/blog/9399/post/290113/6od74AySo607zeQEgWyQ_%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202015-08-09%20%E4%B8%8B%E5%8D%888.25.13.png)
+![Result](result.png)
 
 ## 完整Code
 
