@@ -79,6 +79,8 @@ code {
     </div>
 
     <img style="max-width:100%" :src="'/blogdb/' + filepath + '/' + img_ctrl.filename"/>
+    <br>
+    <button class="btn btn-danger" @click="deleteImage();img_ctrl.show=false;">刪除圖片</button>
 
     <div slot="modal-footer" class="modal-footer">
         <button type="button" class="btn btn-default" @click="img_ctrl.show=false">關閉</button>
@@ -91,13 +93,11 @@ code {
     </div>
     <div>
     <input label="file" type="file" @change.prevent="setImage"/>
-    </div>
-    <div>
     <bs-input label="filename" type="text" v-model="img_upload.filename"/>
     </div>
     <div slot="modal-footer" class="modal-footer">
         <button type="button" class="btn btn-default" @click="img_upload.show=false">取消</button>
-        <button type="button" class="btn btn-primary" @click="img_upload.show=false;uploadFile();">上傳</button>
+        <button type="button" class="btn btn-primary" @click="img_upload.show=false;uploadImage();">上傳</button>
     </div>
 </modal>
 
@@ -221,7 +221,17 @@ var app = new Vue({
         setImage : function(e){
             this.img_upload.file = e.target.files[0];
         },
-        uploadFile : function(){
+        deleteImage : function(){
+            this.$http.post("/image/" + this.filepath, {}, {
+                params:{
+                    method : "deleteImage",
+                    filename : this.img_ctrl.filename,
+                }
+            });
+            ind = this.image_list.indexOf(this.img_ctrl.filename);
+            this.image_list.splice(ind, 1);
+        },
+        uploadImage : function(){
             data = new FormData();
             data.append('file', this.img_upload.file);
             data.append('filename', this.img_upload.filename);

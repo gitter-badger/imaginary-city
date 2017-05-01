@@ -19,3 +19,6 @@ class ImageHandler:
         file_with_path  = "../frontend/blog/" + filepath + "/" + filename
         print(file_with_path)
         img.save(file_with_path) 
+
+    def deleteImage(self, filepath, filename):
+        os.remove("../frontend/blog/" + filepath + "/" + filename)  

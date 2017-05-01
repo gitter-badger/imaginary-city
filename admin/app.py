@@ -70,6 +70,10 @@ class ImageServer(RequestHandler):
             filename = self.get_argument("filename")
             ImageHandler.inst.uploadImage(filepath, filename, upload_file['body'])
 
+        elif method == "deleteImage":
+            filename = self.get_argument("filename")
+            ImageHandler.inst.deleteImage(filepath, filename)
+
 
 _settings = {
     "static_path" : os.path.join(os.path.dirname(__file__), "static"),
