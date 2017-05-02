@@ -1,0 +1,32 @@
+<style>
+
+a.title{
+    text-decoration:none;
+    color: black;
+}
+
+h2 > small{
+    color: #999999;
+}
+
+</style>
+
+
+{% for bp in blogpost_list %}
+
+<a href="#/blog/{{bp['folder']}}" class="title">
+    <h2>
+        {{bp['title']}}
+        <small>
+            {{bp['datetime'].year}}年{{bp['datetime'].month}}月{{bp['datetime'].day}}日
+        </small>
+    </h2>
+</a>
+{% if bp['content'] %}
+{% raw bp['content'] %}
+<a href="#/blog/{{bp['folder']}}" style="text-decoration:none;">...繼續閱讀</a>
+{% else %}
+[無內容]
+{% end %}
+
+{% end %}

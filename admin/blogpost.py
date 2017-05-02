@@ -23,20 +23,18 @@ class BlogpostHandler:
             yaml.dump(self.blogpost_list, f, default_flow_style=False, allow_unicode=True)
 
     def pushPage(self):
+        
         page = open("../frontend/page/1.html", "w", encoding="utf-8")
+        fullblogpost_list = []
+
         for blogpost in sorted(self.blogpost_list, key=lambda x : x["datetime"], reverse=True):
+            
+            bp = blogpost.copy()
+
             dt = blogpost["datetime"]
-            folder = "%04d/%02d/%02d/%s" % (dt.year, dt.month, dt.day, blogpost["filename"])
+            bp['folder'] = "%04d/%02d/%02d/%s" % (dt.year, dt.month, dt.day, blogpost["filename"])
 
-            page.write(
-                (
-                    '<a href="#/blog/%s"><h2>%s</h2></a>\n'
-                )
-                %
-                (folder, blogpost["title"])
-            )
-
-            with open("../frontend/blog/%s/README.md" % (folder,), encoding="utf-8") as md:
+            with open("../frontend/blog/%s/README.md" % (bp['folder'],), encoding="utf-8") as md:
                 preview_content = ""
                 get_line = 0
                 new_line = False
@@ -52,11 +50,19 @@ class BlogpostHandler:
                     get_line += 1
                     if get_line > 3: break
                     preview_content += line
+                
+                bp["content"] = preview_content
+            
+            fullblogpost_list.append(bp)
 
-                if preview_content:
-                    page.write(preview_content + "...\n")
-                else:
-                    page.write("[無內容]\n")
+        import tornado.template
+        loader = tornado.template.Loader("./front_templ")
+        cont = loader.load("page.html").generate(
+            blogpost_list = fullblogpost_list
+        )
+        page.write(cont.decode('utf-8'))
+        page.close()
+        
 
     def list(self):
         return self.blogpost_list
