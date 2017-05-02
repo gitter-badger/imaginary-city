@@ -9,6 +9,11 @@ h2 > small{
     color: #999999;
 }
 
+div.content{
+    padding-top: 5px;
+    padding-bottom: 15px;
+}
+
 </style>
 
 
@@ -22,11 +27,16 @@ h2 > small{
         </small>
     </h2>
 </a>
-{% if bp['content'] %}
-{% raw bp['content'] %}
-<a href="#/blog/{{bp['folder']}}" style="text-decoration:none;">...繼續閱讀</a>
-{% else %}
-[無內容]
-{% end %}
+
+<div class="content">
+    {% if bp['content'] %}
+    {% raw bp['content'] %}
+    <a href="#/blog/{{bp['folder']}}" style="text-decoration:none;">...繼續閱讀</a>
+    {% else %}
+    [無內容]
+    {% end %}
+</div>
+
+<hr/>
 
 {% end %}
