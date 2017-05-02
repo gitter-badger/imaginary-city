@@ -24,6 +24,9 @@ class BlogpostHandler:
 
     def pushPage(self):
         
+        import markdown
+        import tornado.template
+
         page = open("../frontend/page/1.html", "w", encoding="utf-8")
         fullblogpost_list = []
 
@@ -42,7 +45,7 @@ class BlogpostHandler:
                     if line[0] == '#': continue
                     if line == '\n':
                         if not new_line and preview_content:
-                            preview_content += "<br>"
+                            preview_content += "\n"
                             new_line = True
                         continue
 
@@ -50,12 +53,11 @@ class BlogpostHandler:
                     get_line += 1
                     if get_line > 3: break
                     preview_content += line
-                
-                bp["content"] = preview_content
+
+                bp["content"] = markdown.markdown(preview_content)
             
             fullblogpost_list.append(bp)
 
-        import tornado.template
         loader = tornado.template.Loader("./front_templ")
         cont = loader.load("page.html").generate(
             blogpost_list = fullblogpost_list
