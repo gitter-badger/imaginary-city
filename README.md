@@ -1,5 +1,7 @@
 # Imaginary City
 
+[![Join the chat at https://gitter.im/imaginary-city/Lobby](https://badges.gitter.im/imaginary-city/Lobby.svg)](https://gitter.im/imaginary-city/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 一個紀錄著「我」的部落格程序。
 
 ## 動機
