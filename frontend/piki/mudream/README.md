@@ -14,6 +14,10 @@
 
 * 討厭：機率
 
+## 可以在哪裡找到我？
+
+[Github](https://github.com/mudream4869)
+
 ## 技能
 
 ### 程式語言
