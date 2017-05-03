@@ -30,3 +30,8 @@ Piki 是 Private Wiki 的縮寫，只由站長編輯的靜態頁面，
 ## 預覽圖
 
 ![preview](preview.png)
+
+## 授權說明
+
+Coding 部分以 [Apache License](LICENSE) 發布，
+文章以[CC-BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)發佈。
